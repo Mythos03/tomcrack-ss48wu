@@ -1,0 +1,15 @@
+<h2>Fájlok listája</h2>
+
+<div class="file-card-container">
+  <mat-card
+    class="file-card"
+    *ngFor="let file of files"
+    (click)="selectFile(file)"
+    [ngClass]="{ 'selected': selectedFile?.id === file.id }"
+  >
+    <mat-card-title>{{ file.name }}</mat-card-title>
+    <mat-card-subtitle>Méret: {{ file.size | fileSize }}</mat-card-subtitle>
+  </mat-card>
+</div>
+
+<app-file-detail *ngIf="selectedFile" [file]="selectedFile"></app-file-detail>

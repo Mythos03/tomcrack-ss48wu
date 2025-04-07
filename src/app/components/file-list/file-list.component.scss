@@ -1,0 +1,37 @@
+h2 {
+  color: #ffffff;
+  background-color: #3f51b5;
+  padding: 10px;
+  border-radius: 5px;
+  margin-bottom: 1rem;
+}
+
+.file-card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.file-card {
+  flex: 1 1 calc(33.333% - 1rem); // 3 kártya per sor desktopon
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.3s ease;
+  background-color: #3f51b5;
+  color: white;
+
+  &:hover {
+    transform: scale(1.02);
+    background-color: #5c6bc0;
+  }
+
+  &.selected {
+    border: 2px solid #ffca28;
+  }
+}
+
+// Mobil nézethez
+@media (max-width: 768px) {
+  .file-card {
+    flex: 1 1 100%;
+  }
+}

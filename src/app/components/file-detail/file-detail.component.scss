@@ -1,0 +1,48 @@
+.comment-form {
+  margin-top: 1rem;
+
+  .full-width {
+    width: 100%;
+  }
+
+  button {
+    margin-top: 0.5rem;
+  }
+}
+
+mat-card {
+  margin-bottom: 1rem;
+}
+
+mat-card-title {
+  font-weight: bold;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+mat-list-item {
+  color: #000000 !important;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 10px;
+  padding: 10px;
+  font-size: 14px;
+
+  strong {
+    color: #000000 !important;
+  }
+
+  em {
+    color: #000000 !important;
+  }
+}
+
+
+
+@media (max-width: 600px) {
+  mat-list-item {
+    font-size: 0.9rem;
+    color: #000000;
+  }
+}

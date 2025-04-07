@@ -1,0 +1,29 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+  background-color: #ffffff;
+  border-radius: 5px;
+  overflow: hidden;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+th {
+  background-color: #3f51b5;
+  color: #ffffff;
+}
+
+@media (max-width: 600px) {
+  th, td {
+    font-size: 0.8rem;
+    padding: 6px;
+  }
+}
