@@ -1,37 +1,84 @@
-h2 {
-  color: #ffffff;
-  background-color: #3f51b5;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 1rem;
-}
-
-.file-card-container {
+.file-list-container {
+  padding: 16px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .file-card {
-  flex: 1 1 calc(33.333% - 1rem); // 3 kártya per sor desktopon
-  cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.3s ease;
-  background-color: #3f51b5;
-  color: white;
+  max-width: 800px;
+  margin: 0 auto;
+  width: 100%;
 
-  &:hover {
-    transform: scale(1.02);
-    background-color: #5c6bc0;
+  mat-card-title {
+    color: rgba(255, 255, 255, 0.87);
+    font-weight: 500;
   }
 
-  &.selected {
-    border: 2px solid #ffca28;
+  mat-card-subtitle {
+    color: rgba(255, 255, 255, 0.6);
   }
 }
 
-// Mobil nézethez
-@media (max-width: 768px) {
-  .file-card {
-    flex: 1 1 100%;
+.file-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.dot-separator {
+  margin: 0 4px;
+  color: rgba(255, 255, 255, 0.38);
+}
+
+.description-text {
+  white-space: pre-wrap;
+  margin: 16px 0;
+  color: rgba(255, 255, 255, 0.87);
+  line-height: 1.5;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 8px;
+  padding: 16px;
+
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin: 32px 0;
+}
+
+.no-files {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+  margin: 32px 0;
+}
+
+@media (max-width: 600px) {
+  .action-buttons {
+    flex-direction: column;
+
+    button {
+      width: 100%;
+    }
+  }
+
+  .file-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+
+    .dot-separator {
+      display: none;
+    }
   }
 }

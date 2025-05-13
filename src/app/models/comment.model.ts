@@ -1,6 +1,6 @@
-import { User } from './user.model';
-import { File } from './file.model';
-import { v4 as uuidv4 } from 'uuid';
+import {User} from './user.model';
+import {File} from './file.model';
+import {v4 as uuidv4} from 'uuid';
 
 export interface Comment {
   id: string;

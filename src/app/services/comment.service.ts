@@ -1,26 +1,25 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
-  Firestore,
+  addDoc,
   collection,
   collectionData,
-  doc,
-  docData,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  query,
-  where,
-  orderBy,
   CollectionReference,
+  deleteDoc,
+  doc,
   DocumentData,
+  DocumentReference,
+  Firestore,
+  orderBy,
+  query,
   serverTimestamp,
   Timestamp,
-  DocumentReference
+  updateDoc,
+  where
 } from '@angular/fire/firestore';
-import { from, Observable, map } from 'rxjs';
-import { Comment } from '../models/comment.model';
-import { File } from '../models/file.model';
-import { User } from '../models/user.model';
+import {from, map, Observable} from 'rxjs';
+import {Comment} from '../models/comment.model';
+import {File} from '../models/file.model';
+import {User} from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,9 +46,11 @@ export class CommentService {
     return {
       ...data,
       id: data['id'],
-      createdAt: data['createdAt'] instanceof Timestamp
-        ? (data['createdAt'] as Timestamp).toDate()
-        : new Date(data['createdAt'] as string)
+      createdAt: data['createdAt']
+        ? (data['createdAt'] instanceof Timestamp
+            ? (data['createdAt'] as Timestamp).toDate()
+            : new Date(data['createdAt'] as string))
+        : new Date()
     } as Comment;
   }
 
@@ -116,7 +117,7 @@ export class CommentService {
         ...data,
         createdAt: data['createdAt'] instanceof Timestamp
           ? (data['createdAt'] as Timestamp).toDate()
-          : new Date(data['createdAt'] as string),
+          : (data['createdAt'] ? new Date(data['createdAt'] as string) : new Date()),
         author: data['author'] as User,
         file: data['file'] as File
       } as Comment)))
@@ -135,7 +136,7 @@ export class CommentService {
         ...data,
         createdAt: data['createdAt'] instanceof Timestamp
           ? (data['createdAt'] as Timestamp).toDate()
-          : new Date(data['createdAt'] as string),
+          : (data['createdAt'] ? new Date(data['createdAt'] as string) : new Date()),
         author: data['author'] as User,
         file: data['file'] as File
       } as Comment)))

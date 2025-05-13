@@ -1,41 +1,124 @@
+// Card styling
+.upload-card {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fafafa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+mat-card-header {
+  margin-bottom: 20px;
+
+  mat-card-title {
+    font-size: 24px;
+    color: #333;
+  }
+}
+
+// Form styling
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  background-color: #ffffff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  gap: 20px;
 }
 
-input[type="file"] {
-  margin-top: 5px;
+mat-form-field {
+  width: 100%;
 }
 
-button {
-  background-color: #3f51b5;
-  color: white;
-  padding: 10px;
-  border: none;
-  cursor: pointer;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-
-  &:hover {
-    background-color: #303f9f;
-  }
-}
-
-button:disabled {
-  background-color: #ccc;
-}
-
-@media (max-width: 600px) {
-  form {
-    padding: 10px;
-  }
+// File input styling
+.file-input-container {
+  margin: 8px 0;
 
   button {
-    font-size: 0.9rem;
+    border: 1px solid #1976d2;
+    padding: 8px 16px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: rgba(25, 118, 210, 0.04);
+    }
+
+    mat-icon {
+      margin-right: 8px;
+      vertical-align: middle;
+      color: #1976d2;
+    }
+  }
+}
+
+.file-button-text {
+  display: inline-block;
+  vertical-align: middle;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 300px;
+  color: #1976d2;
+}
+
+.file-error {
+  color: #f44336;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+// Actions styling
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+
+  button {
+    padding: 8px 24px;
+
+    mat-icon {
+      margin-right: 8px;
+    }
+
+    &:disabled {
+      background-color: rgba(0, 0, 0, 0.12);
+    }
+  }
+}
+
+// Success/Error snackbar styles
+::ng-deep .success-snackbar {
+  background: #4caf50;
+  color: white;
+}
+
+::ng-deep .error-snackbar {
+  background: #f44336;
+  color: white;
+}
+
+// Responsive design
+@media (max-width: 600px) {
+  .upload-card {
+    margin: 16px;
+    padding: 16px;
+  }
+
+  .file-button-text {
+    max-width: 200px;
+  }
+
+  mat-card-header {
+    margin-bottom: 16px;
+
+    mat-card-title {
+      font-size: 20px;
+    }
+  }
+
+  form {
+    gap: 16px;
+  }
+
+  .actions button {
+    width: 100%;
   }
 }

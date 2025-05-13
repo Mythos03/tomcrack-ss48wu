@@ -1,66 +1,103 @@
-// src/app/components/file-upload/file-upload.component.ts
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { FileService } from '../../services/file.service';
-import { File as CustomFile, createFile } from '../../models/file.model';
-import { Category } from '../../models/category.model';
-import { User } from '../../models/user.model';
+import {Component} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatIconModule} from '@angular/material/icon';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
+import {FileService} from '../../services/file.service';
+import {createFile} from '../../models/file.model';
+import {catchError, finalize} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component({
   selector: 'app-file-upload',
-  templateUrl: './file-upload.component.html',
+  standalone: true,
   imports: [
-    ReactiveFormsModule,
     CommonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule
+    MatButtonModule,
+    MatCardModule,
+    MatIconModule,
+    MatSnackBarModule
   ],
+  templateUrl: './file-upload.component.html',
   styleUrls: ['./file-upload.component.scss']
 })
 export class FileUploadComponent {
-  fileForm: FormGroup;
   selectedFile: File | null = null;
+  isUploading = false;
+  fileInput: HTMLInputElement | null = null;
 
-  constructor(private fb: FormBuilder, private fileService: FileService) {
-    this.fileForm = this.fb.group({
-      fileName: ['', Validators.required],
-      file: [null, Validators.required]
+  constructor(
+    private fileService: FileService,
+    private snackBar: MatSnackBar
+  ) {}
+
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.fileInput = input;
+
+    if (input?.files?.length) {
+      const file = input.files[0];
+      if (file) {
+        this.selectedFile = file;
+      }
+    }
+  }
+
+  onSubmit(): void {
+    if (!this.selectedFile) {
+      this.showError('Nincs kiválasztott fájl');
+      return;
+    }
+
+    this.isUploading = true;
+
+    const fileData = createFile(
+      this.selectedFile.name,
+      this.selectedFile.size,
+      this.selectedFile.name,
+      null,
+      '',
+      undefined
+    );
+
+    this.fileService.addFile(fileData)
+      .pipe(
+        catchError(error => {
+          console.error('Error saving file metadata:', error);
+          this.showError('Hiba történt a fájl mentése közben');
+          return of(null);
+        }),
+        finalize(() => {
+          this.isUploading = false;
+        })
+      )
+      .subscribe(result => {
+        if (result) {
+          this.showSuccess('A fájl sikeresen mentve');
+          this.resetForm();
+        }
+      });
+  }
+
+  private resetForm(): void {
+    this.selectedFile = null;
+    if (this.fileInput) {
+      this.fileInput.value = '';
+    }
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 3000,
+      panelClass: ['success-snackbar']
     });
   }
 
-  onFileSelected(event: any) {
-    const file: File = event.target.files[0];
-    if (file) {
-      this.selectedFile = file;
-      this.fileForm.patchValue({ fileName: file.name, file: file });
-    }
-  }
-
-  onSubmit() {
-    if (this.fileForm.valid && this.selectedFile) {
-      const category: Category = { id: '1', name: 'default' }; // Example category
-      const uploader: User = { id: '1', username: 'admin', email: 'admin@example.com', password: 'encrypted', role: 'admin' }; // Example uploader
-
-      const customFile: CustomFile = createFile(
-        this.selectedFile.name,
-        this.selectedFile.size,
-        '', // Set the download URL if available
-        category,
-        'Description of the file', // Example description
-        uploader
-      );
-
-      this.fileService.addFile(customFile);
-      alert('Fájl feltöltése sikeres!');
-      this.fileForm.reset();
-      this.selectedFile = null;
-    } else {
-      alert('Kérlek válassz egy fájlt!');
-    }
+  private showError(message: string): void {
+    this.snackBar.open(message, 'OK', {
+      duration: 5000,
+      panelClass: ['error-snackbar']
+    });
   }
 }

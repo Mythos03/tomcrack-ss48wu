@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { FileDetailComponent } from './file-detail.component';
+import {FileDetailComponent} from './file-detail.component';
 
 describe('FileDetailComponent', () => {
   let component: FileDetailComponent;

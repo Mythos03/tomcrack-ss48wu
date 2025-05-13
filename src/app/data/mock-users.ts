@@ -1,5 +1,5 @@
 // src/app/data/mock-users.ts
-import { User } from '../models/user.model';
+import {User} from '../models/user.model';
 
 export const MOCK_USERS: User[] = [
   {

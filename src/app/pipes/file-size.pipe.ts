@@ -1,11 +1,14 @@
-// src/app/pipes/file-size.pipe.ts
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 
 @Pipe({
   name: 'fileSize'
 })
 export class FileSizePipe implements PipeTransform {
-  transform(size: number): string {
+  transform(size: number | undefined): string {
+    if (size === undefined || size === null) {
+      return 'N/A';
+    }
+
     if (size < 1024) {
       return `${size} B`;
     } else if (size < 1048576) {

@@ -1,31 +1,30 @@
-import { Category } from './category.model';
-import { User } from './user.model';
+import {User} from './user.model';
+import {Category} from './category.model';
 
 export interface File {
   id?: string;
   name: string;
   size: number;
-  downloadUrl: string;
-  category: Category;
+  path: string;
+  category?: Category | null;
   uploadDate: Date;
   createdAt: Date;
-  description: string;
-  uploader: User;
+  description?: string;
+  uploader?: User;
 }
 
-// Helper function to create a new file (optional)
 export function createFile(
   name: string,
   size: number,
-  downloadUrl: string,
-  category: Category,
+  path: string,
+  category: Category | null,
   description: string,
-  uploader: User
+  uploader?: User
 ): Omit<File, 'id'> {
   return {
     name,
     size,
-    downloadUrl,
+    path,
     category,
     uploadDate: new Date(),
     createdAt: new Date(),

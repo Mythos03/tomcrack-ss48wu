@@ -1,6 +1,6 @@
-import { File, createFile } from "../models/file.model";
-import { Category } from "../models/category.model";
-import { User } from "../models/user.model";
+import {createFile, File} from "../models/file.model";
+import {Category} from "../models/category.model";
+import {User} from "../models/user.model";
 
 const softwareCategory: Category = { id: '1', name: 'Szoftver' };
 const musicCategory: Category = { id: '2', name: 'Zene' };

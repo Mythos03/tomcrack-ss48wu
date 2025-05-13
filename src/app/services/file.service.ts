@@ -1,25 +1,23 @@
-import { Injectable } from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {
-  Firestore,
+  addDoc,
   collection,
   collectionData,
+  CollectionReference,
+  deleteDoc,
   doc,
   docData,
-  addDoc,
-  updateDoc,
-  deleteDoc,
-  DocumentReference,
-  query,
-  where,
-  orderBy,
-  limit,
-  CollectionReference,
   DocumentData,
-  serverTimestamp,
-  Timestamp
+  DocumentReference,
+  Firestore,
+  orderBy,
+  query,
+  Timestamp,
+  updateDoc,
+  where
 } from '@angular/fire/firestore';
-import { from, Observable, map } from 'rxjs';
-import { File } from '../models/file.model';
+import {from, map, Observable} from 'rxjs';
+import {File} from '../models/file.model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,62 +26,71 @@ export class FileService {
   private readonly collectionName = 'files';
   private readonly filesCollection: CollectionReference<DocumentData>;
 
-  constructor(private firestore: Firestore) {
+  constructor(private firestore: Firestore, private ngZone: NgZone) {
     this.filesCollection = collection(this.firestore, this.collectionName);
   }
 
   private toFirestore(file: Partial<File>): DocumentData {
-    const data: DocumentData = { ...file };
-
-    if (file.uploadDate) {
-      data['uploadDate'] = file.uploadDate.toISOString();
-    }
-
-    // For new documents, set server timestamp
-    if (!('createdAt' in file)) {
-      data['createdAt'] = serverTimestamp();
-    }
-    // For updates, if createdAt exists, convert to ISO string
-    else if (file.createdAt) {
-      data['createdAt'] = file.createdAt.toISOString();
-    }
-
-    return data;
+    return {
+      name: file.name || '',
+      size: file.size || 0,
+      path: file.path || '',
+      category: file.category || null,
+      description: file.description || '',
+      uploader: file.uploader || null,
+      uploadDate: file.uploadDate || new Date(),
+      createdAt: file.createdAt || new Date()
+    };
   }
 
   private fromFirestore(data: DocumentData): File {
     return {
-      ...data,
       id: data['id'],
-      uploadDate: new Date(data['uploadDate'] as string),
+      name: data['name'] || '',
+      size: data['size'] || 0,
+      path: data['path'] || '',
+      category: data['category'] || null,
+      description: data['description'] || '',
+      uploader: data['uploader'],
+      uploadDate: data['uploadDate'] instanceof Timestamp
+        ? data['uploadDate'].toDate()
+        : new Date(data['uploadDate']),
       createdAt: data['createdAt'] instanceof Timestamp
-        ? (data['createdAt'] as Timestamp).toDate()
-        : new Date(data['createdAt'] as string),
-      category: data['category'],
-      uploader: data['uploader']
-    } as File;
+        ? data['createdAt'].toDate()
+        : new Date(data['createdAt'])
+    };
   }
 
-  addFile(file: Omit<File, 'id' | 'createdAt'>): Observable<DocumentReference> {
-    return from(addDoc(this.filesCollection, this.toFirestore(file)));
+  addFile(file: Omit<File, 'id'>): Observable<DocumentReference> {
+    const fileData = this.toFirestore(file);
+    return from(addDoc(this.filesCollection, fileData));
   }
 
   getFiles(): Observable<File[]> {
-    return collectionData(this.filesCollection, { idField: 'id' }).pipe(
-      map(files => files.map(file => this.fromFirestore(file)))
-    );
+    return new Observable(observer => {
+      this.ngZone.run(() => {
+        collectionData(this.filesCollection, { idField: 'id' })
+          .pipe(map(files => files.map(file => this.fromFirestore(file))))
+          .subscribe(observer);
+      });
+    });
   }
 
   getFileById(id: string): Observable<File | undefined> {
     const fileRef = doc(this.firestore, this.collectionName, id);
-    return docData(fileRef, { idField: 'id' }).pipe(
-      map(file => file ? this.fromFirestore(file) : undefined)
-    );
+    return new Observable(observer => {
+      this.ngZone.run(() => {
+        docData(fileRef, { idField: 'id' })
+          .pipe(map(file => file ? this.fromFirestore(file) : undefined))
+          .subscribe(observer);
+      });
+    });
   }
 
   updateFile(id: string, file: Partial<File>): Observable<void> {
     const fileRef = doc(this.firestore, this.collectionName, id);
-    return from(updateDoc(fileRef, this.toFirestore(file)));
+    const updateData = this.toFirestore(file);
+    return from(updateDoc(fileRef, updateData));
   }
 
   deleteFile(id: string): Observable<void> {
@@ -97,47 +104,12 @@ export class FileService {
       where('category.id', '==', categoryId),
       orderBy('uploadDate', 'desc')
     );
-
-    return collectionData(q, { idField: 'id' }).pipe(
-      map(files => files.map(file => this.fromFirestore(file)))
-    );
-  }
-
-  getFilesByUploader(uploaderId: string): Observable<File[]> {
-    const q = query(
-      this.filesCollection,
-      where('uploader.id', '==', uploaderId),
-      orderBy('uploadDate', 'desc')
-    );
-
-    return collectionData(q, { idField: 'id' }).pipe(
-      map(files => files.map(file => this.fromFirestore(file)))
-    );
-  }
-
-  getRecentFiles(limitCount: number): Observable<File[]> {
-    const q = query(
-      this.filesCollection,
-      orderBy('uploadDate', 'desc'),
-      limit(limitCount)
-    );
-
-    return collectionData(q, { idField: 'id' }).pipe(
-      map(files => files.map(file => this.fromFirestore(file)))
-    );
-  }
-
-  searchFilesByName(searchTerm: string): Observable<File[]> {
-    const q = query(
-      this.filesCollection,
-      where('name', '>=', searchTerm),
-      where('name', '<=', searchTerm + '\uf8ff'),
-      orderBy('name'),
-      limit(10)
-    );
-
-    return collectionData(q, { idField: 'id' }).pipe(
-      map(files => files.map(file => this.fromFirestore(file)))
-    );
+    return new Observable(observer => {
+      this.ngZone.run(() => {
+        collectionData(q, { idField: 'id' })
+          .pipe(map(files => files.map(file => this.fromFirestore(file))))
+          .subscribe(observer);
+      });
+    });
   }
 }

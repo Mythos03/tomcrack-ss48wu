@@ -1,22 +1,22 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
-  Firestore,
-  collection,
-  CollectionReference,
-  DocumentData,
   addDoc,
-  DocumentReference,
+  collection,
   collectionData,
+  CollectionReference,
+  deleteDoc,
   doc,
   docData,
-  updateDoc,
-  deleteDoc,
+  DocumentData,
+  DocumentReference,
+  Firestore,
+  limit,
   query,
-  where,
-  limit
+  updateDoc,
+  where
 } from '@angular/fire/firestore';
-import { User } from '../models/user.model';
-import {from, Observable } from 'rxjs';
+import {User} from '../models/user.model';
+import {from, Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'

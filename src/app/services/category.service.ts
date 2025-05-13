@@ -1,22 +1,23 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {
-  Firestore,
+  addDoc,
   collection,
+  collectionData,
   CollectionReference,
+  deleteDoc,
+  doc,
   DocumentData,
   DocumentReference,
-  addDoc,
-  collectionData,
-  docData,
-  doc,
-  updateDoc,
-  deleteDoc,
-  query,
+  Firestore,
+  getDoc,
   orderBy,
+  query,
+  updateDoc,
   where
 } from '@angular/fire/firestore';
-import { Category } from '../models/category.model';
-import {from, Observable } from 'rxjs';
+import {Category} from '../models/category.model';
+import {from, map, Observable, of} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -39,7 +40,20 @@ export class CategoryService {
 
   getCategoryById(id: string): Observable<Category | undefined> {
     const categoryRef = doc(this.firestore, this.collectionName, id);
-    return docData(categoryRef, { idField: 'id' }) as Observable<Category>;
+    return from(getDoc(categoryRef)).pipe(
+      map(doc => {
+        if (doc.exists()) {
+          return doc.data() as Category;
+        } else {
+          console.warn('Category not found.');
+          return undefined;
+        }
+      }),
+      catchError(error => {
+        console.error('Error fetching category:', error);
+        return of(undefined);  // Emit undefined so subscribers handle errors
+      })
+    );
   }
 
   updateCategory(id: string, category: Partial<Category>): Observable<void> {

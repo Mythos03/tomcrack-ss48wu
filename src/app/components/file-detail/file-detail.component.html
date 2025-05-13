@@ -1,32 +1,48 @@
-<mat-card>
-  <mat-card-title>Új hozzászólás</mat-card-title>
-  <mat-card-content>
-    <form [formGroup]="commentForm" (ngSubmit)="onSubmit()" class="comment-form">
-      <mat-form-field appearance="fill" class="full-width">
-        <mat-label>Hozzászólás</mat-label>
-        <textarea matInput formControlName="content" rows="3"></textarea>
-        <mat-error *ngIf="commentForm.get('content')?.hasError('required')">
-          A hozzászólás nem lehet üres
-        </mat-error>
-        <mat-error *ngIf="commentForm.get('content')?.hasError('minlength')">
-          Legalább 3 karakter hosszúnak kell lennie
-        </mat-error>
-      </mat-form-field>
-
-      <button mat-raised-button color="primary" type="submit" [disabled]="commentForm.invalid">
-        Küldés
+<div class="file-detail-container" *ngIf="file">
+  <mat-card class="file-detail-card">
+    <mat-card-header>
+      <mat-card-title>{{ file.name }}</mat-card-title>
+      <mat-card-subtitle>
+        <div class="file-info">
+          <span>Méret: {{ file.size | fileSize }}</span>
+          <span class="dot-separator">•</span>
+          <span>Feltöltve: {{ file.uploadDate | date:'yyyy.MM.dd HH:mm' }}</span>
+        </div>
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-divider></mat-divider>
+    <mat-card-actions align="end" class="action-buttons">
+      <button
+        mat-stroked-button
+        color="primary"
+        (click)="downloadFile()"
+        [attr.aria-label]="getFajlAriaLabel(file.name || 'N/A')">
+        <mat-icon aria-hidden="true">cloud_download</mat-icon>
+        <span>Letöltés</span>
       </button>
-    </form>
-  </mat-card-content>
-</mat-card>
-
-<mat-card>
-  <mat-card-title>Hozzászólások</mat-card-title>
-  <mat-card-content>
-    <mat-list>
-      <mat-list-item *ngFor="let comment of comments">
-        <strong>{{ comment.author.username }}:</strong> {{ comment.content }} <em>({{ comment.createdAt | date:'short' }})</em>
-      </mat-list-item>
-    </mat-list>
-  </mat-card-content>
-</mat-card>
+      <button
+        mat-stroked-button
+        color="accent"
+        (click)="editFile()"
+        aria-label="Fájl szerkesztése">
+        <mat-icon aria-hidden="true">edit</mat-icon>
+        <span>Szerkesztés</span>
+      </button>
+      <button
+        mat-stroked-button
+        color="warn"
+        (click)="deleteFile()"
+        aria-label="Fájl törlése">
+        <mat-icon aria-hidden="true">delete</mat-icon>
+        <span>Törlés</span>
+      </button>
+      <button
+        mat-stroked-button
+        color="accent"
+        aria-label="Fájl megosztása">
+        <mat-icon aria-hidden="true">share</mat-icon>
+        <span>Megosztás</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>

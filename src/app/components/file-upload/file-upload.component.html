@@ -1,15 +1,33 @@
-<form [formGroup]="fileForm" (ngSubmit)="onSubmit()">
-  <mat-form-field appearance="fill">
-    <mat-label>Fájl neve</mat-label>
-    <input type="text" formControlName="fileName" matInput placeholder="File Name">
-  </mat-form-field>
-  <div>
-    <label for="file">Fájl kiválasztása</label>
-    <input id="file" type="file" (change)="onFileSelected($event)">
-  </div>
-  <button mat-raised-button color="primary" type="submit" [disabled]="!fileForm.valid">Feltöltés</button>
-</form>
+<mat-card class="upload-card">
+  <mat-card-header>
+    <mat-card-title>Fájl feltöltése</mat-card-title>
+  </mat-card-header>
 
-<p *ngIf="fileForm.get('file')?.invalid && fileForm.get('file')?.touched">
-  Fájl kiválasztása kötelező!
-</p>
+  <mat-card-content>
+    <div class="file-input-container">
+      <button type="button"
+              mat-stroked-button
+              color="primary"
+              (click)="fileInput.click()">
+        <mat-icon>{{ selectedFile ? 'check_circle' : 'upload_file' }}</mat-icon>
+        <span class="file-button-text">
+          {{ selectedFile?.name || 'Fájl kiválasztása' }}
+        </span>
+      </button>
+      <input #fileInput
+             type="file"
+             (change)="onFileSelected($event)"
+             style="display: none">
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button
+              color="primary"
+              (click)="onSubmit()"
+              [disabled]="!selectedFile">
+        <mat-icon>cloud_upload</mat-icon>
+        Feltöltés
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>
