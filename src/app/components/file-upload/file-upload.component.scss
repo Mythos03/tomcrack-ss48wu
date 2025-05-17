@@ -17,7 +17,6 @@ mat-card-header {
   }
 }
 
-// Form styling
 form {
   display: flex;
   flex-direction: column;
@@ -28,7 +27,6 @@ mat-form-field {
   width: 100%;
 }
 
-// File input styling
 .file-input-container {
   margin: 8px 0;
 
@@ -65,7 +63,6 @@ mat-form-field {
   margin-top: 8px;
 }
 
-// Actions styling
 .actions {
   display: flex;
   justify-content: flex-end;
@@ -84,7 +81,6 @@ mat-form-field {
   }
 }
 
-// Success/Error snackbar styles
 ::ng-deep .success-snackbar {
   background: #4caf50;
   color: white;
@@ -95,7 +91,6 @@ mat-form-field {
   color: white;
 }
 
-// Responsive design
 @media (max-width: 600px) {
   .upload-card {
     margin: 16px;

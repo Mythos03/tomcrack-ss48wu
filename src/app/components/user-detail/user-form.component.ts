@@ -129,12 +129,10 @@ export class UserFormComponent implements OnChanges {
         email: this.user.email,
         role: this.user.role
       });
-      // Clear password field and remove required validator in edit mode
       this.userForm.get('password')?.setValidators([
         Validators.pattern(this.passwordPattern)
       ]);
     } else {
-      // Set required validator and password pattern for new users
       this.userForm.get('password')?.setValidators([
         Validators.required,
         Validators.pattern(this.passwordPattern)

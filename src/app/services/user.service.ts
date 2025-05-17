@@ -29,14 +29,10 @@ export class UserService {
     this.usersCollection = collection(this.firestore, this.collectionName);
   }
 
-  /**
-   * Creates a new user document in Firestore.
-   * WARNING: Ensure the password is properly hashed before calling this method.
-   */
   addUser(user: User): Observable<DocumentReference<User>> {
     const userData = {
       ...user,
-      role: user.role || 'user' // Default to 'user' role if not specified
+      role: user.role || 'user'
     };
 
     return from(addDoc(this.usersCollection, userData)) as Observable<DocumentReference<User>>;

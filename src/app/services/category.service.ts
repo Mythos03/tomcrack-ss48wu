@@ -51,7 +51,7 @@ export class CategoryService {
       }),
       catchError(error => {
         console.error('Error fetching category:', error);
-        return of(undefined);  // Emit undefined so subscribers handle errors
+        return of(undefined);
       })
     );
   }

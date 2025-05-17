@@ -56,8 +56,8 @@ export class AuthService {
           id: credential.user.uid,
           username: userData.username,
           email: userData.email,
-          password: '', // Don't store the actual password
-          role: 'user' // Default role for new users
+          password: '',
+          role: 'user'
         };
 
         await setDoc(doc(this.firestore, this.userCollection, user.id), user);
@@ -90,12 +90,10 @@ export class AuthService {
         if (doc.exists()) {
           return doc.data() as User;
         }
-        // Instead of returning null, throw a specific error
         throw new Error('User not found');
       }),
       catchError(error => {
         console.error('Error fetching user data:', error);
-        // Re-throw the error to be handled by the caller
         throw error;
       })
     );
