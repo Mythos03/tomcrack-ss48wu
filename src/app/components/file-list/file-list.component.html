@@ -4,52 +4,39 @@
       <mat-card-title>{{ file.name }}</mat-card-title>
       <mat-card-subtitle>
         <div class="file-info">
-          <span>Méret: {{ file.size | fileSize }}</span>
+          <span>Size: {{ file.size | fileSize }}</span>
           <span class="dot-separator">•</span>
-          <span>Feltöltve: {{ file.uploadDate | date:'yyyy.MM.dd HH:mm' }}</span>
+          <span>Uploaded: {{ file.uploadDate ? (file.uploadDate | date:'yyyy.MM.dd HH:mm') : 'N/A' }}</span>
         </div>
       </mat-card-subtitle>
     </mat-card-header>
 
-    <mat-card-content *ngIf="file.description">
-      <p class="description-text">{{ file.description }}</p>
+    <mat-card-content>
+      <p class="description-text" *ngIf="file.description">{{ file.description }}</p>
+
+      <div class="comment-section">
+        <mat-form-field appearance="outline" class="comment-input">
+          <mat-label>Write a comment</mat-label>
+          <input matInput [(ngModel)]="newComments[file.id || '']" />
+        </mat-form-field>
+        <button mat-raised-button color="primary" (click)="publishComment(file)">Publish</button>
+      </div>
+
+      <div class="comments" *ngIf="file.comments?.length">
+        <mat-divider></mat-divider>
+        <h4>Comments:</h4>
+        <div *ngFor="let comment of file.comments" class="comment">
+          <p><strong>{{ comment.author.username }}</strong>: {{ comment.content }}</p>
+          <p class="comment-date">{{ comment.createdAt | date:'yyyy.MM.dd HH:mm' }}</p>
+        </div>
+      </div>
     </mat-card-content>
 
     <mat-divider></mat-divider>
 
     <mat-card-actions align="end" class="action-buttons">
-      <button
-        mat-stroked-button
-        color="primary"
-        (click)="downloadFile(file)"
-        [attr.aria-label]="'Fájl letöltése: ' + file.name">
-        <mat-icon aria-hidden="true">cloud_download</mat-icon>
-        <span>Letöltés</span>
-      </button>
-      <button
-        mat-stroked-button
-        color="accent"
-        (click)="editFile(file)"
-        aria-label="Fájl szerkesztése">
-        <mat-icon aria-hidden="true">edit</mat-icon>
-        <span>Szerkesztés</span>
-      </button>
-      <button
-        mat-stroked-button
-        color="warn"
-        (click)="deleteFile(file)"
-        aria-label="Fájl törlése">
-        <mat-icon aria-hidden="true">delete</mat-icon>
-        <span>Törlés</span>
-      </button>
+      <button mat-stroked-button color="accent" (click)="editFile(file)">Edit</button>
+      <button mat-stroked-button color="warn" (click)="deleteFile(file)">Delete</button>
     </mat-card-actions>
   </mat-card>
-
-  <div *ngIf="loading" class="loading-spinner">
-    <mat-spinner diameter="40"></mat-spinner>
-  </div>
-
-  <div *ngIf="!loading && files.length === 0" class="no-files">
-    <p>Nincsenek feltöltött fájlok</p>
-  </div>
 </div>

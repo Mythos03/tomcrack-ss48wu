@@ -1,8 +1,9 @@
-import {User} from './user.model';
-import {Category} from './category.model';
+import { User } from './user.model';
+import { Category } from './category.model';
+import { Comment } from './comment.model';
 
 export interface File {
-  id?: string;
+  id: string;
   name: string;
   size: number;
   path: string;
@@ -11,6 +12,7 @@ export interface File {
   createdAt: Date;
   description?: string;
   uploader?: User;
+  comments?: Comment[];
 }
 
 export function createFile(

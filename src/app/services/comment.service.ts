@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {
   addDoc,
   collection,
@@ -16,10 +16,10 @@ import {
   updateDoc,
   where
 } from '@angular/fire/firestore';
-import {from, map, Observable} from 'rxjs';
-import {Comment} from '../models/comment.model';
-import {File} from '../models/file.model';
-import {User} from '../models/user.model';
+import { from, map, Observable } from 'rxjs';
+import { Comment } from '../models/comment.model';
+import { File } from '../models/file.model';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -48,8 +48,8 @@ export class CommentService {
       id: data['id'],
       createdAt: data['createdAt']
         ? (data['createdAt'] instanceof Timestamp
-            ? (data['createdAt'] as Timestamp).toDate()
-            : new Date(data['createdAt'] as string))
+          ? (data['createdAt'] as Timestamp).toDate()
+          : new Date(data['createdAt'] as string))
         : new Date()
     } as Comment;
   }
